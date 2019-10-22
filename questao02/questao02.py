@@ -52,6 +52,13 @@ class ConcretBuilder1(Builder):
 # classe de conexao com o banco em desenv no mysql
 class Banco:
 
+	__instance = None
+
+	def instance(self):
+		if not Banco.__instance:
+			Banco.__instance = Banco()
+		return Banco.__instance
+
 	def __init__(self) -> None:
 		self.endereco = "localhost"
 		self.usuario = "root"
