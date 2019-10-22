@@ -3,36 +3,97 @@
 # funcione para os varios setores e filiais da empresa
 # Aplique o padrão composite visando calcular a folha de ponto da empresa
 
-class Funcionario:
+from __future__ import annotations
+from abc import ABC, abstractmethod
+from typing import List
+
+class Component(ABC):
+	@property
+	def nome(self):
+		return self._nome
+
+	@property
+	def salario(self):
+		return self._salario
+
+	@property
+	def setor(self):
+		return self._setor
+
+	@nome.setter
+	def nome(self, nome):
+		self._nome = nome
+	
+	@salario.setter
+	def salario(self, salario):
+		self._salario = salario
+
+	@setor.setter
+	def setor(self, setor):
+		self._setor = setor
+
+	def add(self, component):
+		pass
+
+	def remove(self, component):
+		pass
+
+	def is_composite(self):
+		return False
+
+	@abstractmethod
+	def operation(self):
+		pass
+
+class Funcionario(Component):
 	def __init__(self, nome, salario):
-		self.nome = nome
-		self.salario = salario
+		self._nome = nome
+		self._salario = salario
+		self._setor = ""
 
-class SetorTi:
+	def operation(self):
+		return self._salario
 
-	def __init__(self):
-		self.funcionarios = []
+class Setor(Component):
 
-	def adiciona_usuario(self, funcionario):
-		self.funcionarios.append(funcionario)
+	def __init__(self, nome):
+		self._funcionarios: List[Component] = []
+		self._nome = nome
 
-	def calcula_folha(self):
+	def add(self, component):
+		self._funcionarios.append(component)
+		component._setor = self._nome
+
+	def operation(self):
 		custo = 0.0
-		for funcionario in self.funcionarios:
-			custo += funcionario.salario
-		return custo 
+		for funcionario in self._funcionarios:
+			custo += funcionario.operation()
+		return custo
 
 class Principal:
-	def __init__(self):
-		funcionario = Funcionario("joao", 1000)
-		funcionario2 = Funcionario("maria", 1400)
-
-		setor = SetorTi()
-		setor.adiciona_usuario(funcionario)
-		setor.adiciona_usuario(funcionario2)
-
-		print("O custo da Folha de TI é " + str(setor.calcula_folha()))
-
+	def folha_empresa(self, component):
+		print(f"Total: {component.operation()}", end="")
 
 if __name__ == '__main__':
 	principal = Principal()
+
+	empresa = Setor("Empresa")
+
+	desenvolvimento = Setor("Desenvolvimento")
+	desenvolvimento.add(Funcionario("Batata", 10000))
+	desenvolvimento.add(Funcionario("LifusD", 10000))
+	
+	engenharia = Setor("Engenharia")
+	engenharia.add(Funcionario("Fernando", 15000))
+	engenharia.add(Funcionario("Gabriel", 15000))
+	
+	design = Setor("Design")
+	design.add(Funcionario("ReyalS", 12000))
+	design.add(Funcionario("Taiga", 12000))
+
+	empresa.add(desenvolvimento)
+	empresa.add(engenharia)
+	empresa.add(design)
+
+	principal.folha_empresa(empresa)
+

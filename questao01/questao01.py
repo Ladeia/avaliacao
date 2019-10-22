@@ -3,7 +3,13 @@
 import unittest
 
 class Funcoes:
-
+	def funcao_a(self, value):
+		if (value > 100):
+			return "funcao so calcula ate 100"
+		elif (value < 2):
+			return (value - (value * 2))
+		elif (value >= 2):
+			return ((value * 2) + 1)
 
 class TestStringMethods(unittest.TestCase):
 	def test_1(self):
@@ -15,7 +21,7 @@ class TestStringMethods(unittest.TestCase):
 		obj = Funcoes()
 		result = obj.funcao_a(1)
 		self.assertEqual(result, -1)
-		
+			
 	def test_3(self):
 		obj = Funcoes()
 		result = obj.funcao_a(2)
@@ -33,4 +39,4 @@ class TestStringMethods(unittest.TestCase):
 		self.assertEqual(result, "funcao so calcula ate 100")
 		
 if __name__ == '__main__':
-    unittest.main()
+	unittest.main()
